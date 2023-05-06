@@ -2,6 +2,8 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
+	"log"
 
 	"github.com/gorilla/mux"
 
@@ -72,5 +74,22 @@ func createMovie(w http.ResponseWriter, r *http.Request) {
 	movies = append(movies, movie)
 
 	json.NewEncoder(w).Encode(movie)
+
+}
+
+func main() {
+	r := mux.NewRouter()
+
+	movies = append(movies, Movie{ID: "1", Isbn: "31234", Title: "Movie One", Director: &Director{Firstname: "Steve", Lastname: "Smith"}})
+	movies = append(movies, Movie{ID: "2", Isbn: "43456", Title: "Movie Two", Director: &Director{Firstname: "John", Lastname: "Doe"}})
+
+	r.HandleFunc("/movies", getMovies).Methods("GET")
+	r.HandleFunc("/movies/{id}", getMovie).Methods("GET")
+	r.HandleFunc("/movies", createMovie).Methods("POST")
+	r.HandleFunc("/movies/{id}", updateMovie).Methods("PUT")
+	r.HandleFunc("/movies/{id}", deleteMovie).Methods("DELETE")
+
+	fmt.Printf("Starting Server at port: 8000")
+	log.Fatal(http.ListenAndServe(":8000", r))
 
 }
