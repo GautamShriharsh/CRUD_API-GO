@@ -3,9 +3,11 @@ package main
 import (
 	"encoding/json"
 
-	"net/http"
-
 	"github.com/gorilla/mux"
+
+	"math/rand"
+	"net/http"
+	"strconv"
 )
 
 type Movie struct {
@@ -59,5 +61,16 @@ func getMovie(w http.ResponseWriter, r *http.Request) {
 	}
 	// w.WriteHeader(http.StatusNotFound)
 	// json.NewEncoder(w).Encode(http.StatusNotFound)
+
+}
+
+func createMovie(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var movie Movie
+	_ = json.NewDecoder(r.Body).Decode(&movie)
+	movie.ID = strconv.Itoa(rand.Intn(100))
+	movies = append(movies, movie)
+
+	json.NewEncoder(w).Encode(movie)
 
 }
