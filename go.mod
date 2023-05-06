@@ -1,0 +1,3 @@
+module CRUD-API-GO/CRUD_API_GO
+
+go 1.19
